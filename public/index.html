@@ -45,13 +45,14 @@
       margin: 5px 0;
     }
 
-    .stamp-bar {
+    .stamp-buttons {
       display: flex;
       justify-content: flex-start;
       gap: 10px;
       padding: 5px;
       border: 1px solid #ccc;
       background: #fafafa;
+      margin-bottom: 5px;
     }
 
     .stamp {
@@ -65,14 +66,12 @@
 
 <body>
   <div class="chat">
-    <div class="stamp-bar">
-      <button type="button" class="toggle-stamp">Stamp</button>
-      <div class="stamp-bar" style="display: none;">
-        <button class="stamp" data-stamp="😊">😊</button>
-        <button class="stamp" data-stamp="😢">😢</button>
-        <button class="stamp" data-stamp="😡">😡</button>
-        <button class="stamp" data-stamp="👍">👍</button>
-      </div>
+    <button type="button" class="toggle-stamp">Stamp</button>
+    <div class="stamp-buttons" style="display: none;">
+      <button class="stamp" data-stamp="😊">😊</button>
+      <button class="stamp" data-stamp="😢">😢</button>
+      <button class="stamp" data-stamp="😡">😡</button>
+      <button class="stamp" data-stamp="👍">👍</button>
     </div>
     <ul class="messages"></ul>
     <form class="form">
@@ -107,15 +106,14 @@
       });
 
       const toggleButton = document.querySelector('.toggle-stamp');
-      const stampBar = document.querySelector('.stamp-bar');
+      const stampButtons = document.querySelector('.stamp-buttons');
       toggleButton.onclick = function () {
-        if (stampBar.style.display === 'none') {
-          stampBar.style.display = 'flex';
+        if (stampButtons.style.display === 'none') {
+          stampButtons.style.display = 'flex';
         } else {
-          stampBar.style.display = 'none';
+          stampButtons.style.display = 'none';
         }
       };
-
 
       ws.onmessage = function (msg) {
         const response = msg.data
