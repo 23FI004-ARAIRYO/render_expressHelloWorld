@@ -36,6 +36,21 @@
       background: #eee;
       cursor: pointer;
     }
+
+    .stamp-bar {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      padding: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .stamp {
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #eee;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -71,6 +86,13 @@
         input.value = ''
         input.focus()
       }
+
+      document.querySelectorAll('.stamp').forEach(button => {
+        button.onclick = function () {
+          const stamp = button.dataset.stamp;
+          ws.send(myId + ': ' + stamp);
+        };
+      });
 
       ws.onmessage = function (msg) {
         const response = msg.data
