@@ -61,6 +61,68 @@
       background: #eee;
       cursor: pointer;
     }
+
+    .toggle-wallpaper {
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f0f0f0;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .wallpaper-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      background: #fafafa;
+      margin-bottom: 10px;
+    }
+
+    .color {
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .color[data-color="red"] {
+      background-color: red;
+    }
+
+    .color[data-color="yellow"] {
+      background-color: gold;
+      color: black;
+    }
+
+    .color[data-color="green"] {
+      background-color: green;
+    }
+
+    .color[data-color="lightblue"] {
+      background-color: lightblue;
+      color: black;
+    }
+
+    .color[data-color="blue"] {
+      background-color: blue;
+    }
+
+    .color[data-color="purple"] {
+      background-color: purple;
+    }
+
+    .color[data-color="black"] {
+      background-color: black;
+    }
+
+    .color[data-color="white"] {
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 
@@ -80,6 +142,17 @@
       <button class="stamp" data-stamp="😡">😡</button>
       <button class="stamp" data-stamp="👍">👍</button>
       <button class="stamp" data-stamp="👋">👋</button>
+    </div>
+    <button type="button" class="toggle-wallpaper">Wallpaper</button>
+    <div class="wallpaper-buttons" style="display: none;">
+      <button class="color" data-color="red">Red</button>
+      <button class="color" data-color="yellow">Yellow</button>
+      <button class="color" data-color="green">Green</button>
+      <button class="color" data-color="lightblue">Light Blue</button>
+      <button class="color" data-color="blue">Blue</button>
+      <button class="color" data-color="purple">Purple</button>
+      <button class="color" data-color="black">Black</button>
+      <button class="color" data-color="white">White</button>
     </div>
     <ul class="messages"></ul>
     <form class="form">
@@ -122,6 +195,22 @@
           stampButtons.style.display = 'none';
         }
       };
+
+      // Wallpaperボタンでカラーパネルを表示/非表示
+      const wallpaperToggle = document.querySelector('.toggle-wallpaper');
+      const wallpaperButtons = document.querySelector('.wallpaper-buttons');
+      wallpaperToggle.onclick = function () {
+        wallpaperButtons.style.display =
+          wallpaperButtons.style.display === 'none' ? 'flex' : 'none';
+      };
+
+      // 背景色を変更
+      document.querySelectorAll('.color').forEach(button => {
+        button.onclick = function () {
+          const color = button.dataset.color;
+          document.body.style.backgroundColor = color;
+        };
+      });
 
       ws.onmessage = function (msg) {
         const response = msg.data
