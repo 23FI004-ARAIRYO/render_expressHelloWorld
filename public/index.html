@@ -209,6 +209,13 @@
         button.onclick = function () {
           const color = button.dataset.color;
           document.body.style.backgroundColor = color;
+
+          // 黒背景のときは文字を白、それ以外は黒に
+          if (color === 'black') {
+            document.body.style.color = 'white';
+          } else {
+            document.body.style.color = 'black';
+          }
         };
       });
 
