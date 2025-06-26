@@ -37,12 +37,21 @@
       cursor: pointer;
     }
 
+    .toggle-stamp {
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f0f0f0;
+      cursor: pointer;
+      margin: 5px 0;
+    }
+
     .stamp-bar {
       display: flex;
       justify-content: flex-start;
       gap: 10px;
       padding: 5px;
-      border-bottom: 1px solid #ccc;
+      border: 1px solid #ccc;
+      background: #fafafa;
     }
 
     .stamp {
@@ -57,70 +66,82 @@
 <body>
   <div class="chat">
     <div class="stamp-bar">
-      <button class="stamp" data-stamp="😊">😊</button>
-      <button class="stamp" data-stamp="😢">😢</button>
-      <button class="stamp" data-stamp="😡">😡</button>
-      <button class="stamp" data-stamp="👍">👍</button>
+      <button type="button" class="toggle-stamp">Stamp</button>
+      <div class="stamp-bar" style="display: none;">
+        <button class="stamp" data-stamp="😊">😊</button>
+        <button class="stamp" data-stamp="😢">😢</button>
+        <button class="stamp" data-stamp="😡">😡</button>
+        <button class="stamp" data-stamp="👍">👍</button>
+      </div>
+      <ul class="messages"></ul>
+      <form class="form">
+        <input class="input" autocomplete="off" />
+        <button class="submit">Send</button>
+      </form>
     </div>
-    <ul class="messages"></ul>
-    <form class="form">
-      <input class="input" autocomplete="off" />
-      <button class="submit">Send</button>
-    </form>
-  </div>
 
-  <script>
-    function main() {
-      const myId = self.crypto.randomUUID().substr(0, 8)
+    <script>
+      function main() {
+        const myId = self.crypto.randomUUID().substr(0, 8)
 
-      const host = location.origin.replace(/^http/, 'ws')
-      const ws = new WebSocket(host + '/ws')
+        const host = location.origin.replace(/^http/, 'ws')
+        const ws = new WebSocket(host + '/ws')
 
-      const form = document.querySelector('.form')
+        const form = document.querySelector('.form')
 
-      form.onsubmit = function (e) {
-        e.preventDefault()
-        const input = document.querySelector('.input')
-        const text = input.value
-        ws.send(myId + ': ' + text)
-        input.value = ''
-        input.focus()
-      }
+        form.onsubmit = function (e) {
+          e.preventDefault()
+          const input = document.querySelector('.input')
+          const text = input.value
+          ws.send(myId + ': ' + text)
+          input.value = ''
+          input.focus()
+        }
 
-      document.querySelectorAll('.stamp').forEach(button => {
-        button.onclick = function () {
-          const stamp = button.dataset.stamp;
-          ws.send(myId + ': ' + stamp);
+        document.querySelectorAll('.stamp').forEach(button => {
+          button.onclick = function () {
+            const stamp = button.dataset.stamp;
+            ws.send(myId + ': ' + stamp);
+          };
+        });
+
+        const toggleButton = document.querySelector('.toggle-stamp');
+        const stampBar = document.querySelector('.stamp-bar');
+        toggleButton.onclick = function () {
+          if (stampBar.style.display === 'none') {
+            stampBar.style.display = 'flex';
+          } else {
+            stampBar.style.display = 'none';
+          }
         };
-      });
 
-      ws.onmessage = function (msg) {
-        const response = msg.data
-        // 6a7fdb38: yoge!!
-        const [id, text] = response.split(': ')
+        ws.onmessage = function (msg) {
+          const response = msg.data
+          // 6a7fdb38: yoge!!
+          const [id, text] = response.split(': ')
 
-        const messageList = document.querySelector('.messages')
-        const li = document.createElement('li')
-        li.textContent = response
-        document.createElement('img')
-        const img = document.createElement('img')
-        img.src = `https://api.dicebear.com/9.x/rings/svg?seed=${id}`
-        img.alt = 'Dice'
-        img.style.width = '20px'
-        img.style.height = '20px'
-        img.style.verticalAlign = 'middle'
-        li.prepend(img)
+          const messageList = document.querySelector('.messages')
+          const li = document.createElement('li')
+          li.textContent = response
+          document.createElement('img')
+          const img = document.createElement('img')
+          img.src = `https://api.dicebear.com/9.x/rings/svg?seed=${id}`
+          img.alt = 'Dice'
+          img.style.width = '20px'
+          img.style.height = '20px'
+          img.style.verticalAlign = 'middle'
+          li.prepend(img)
 
-        messageList.appendChild(li)
+          messageList.appendChild(li)
+        }
+
+        ws.onerror = function (error) {
+          console.error('WebSocket Error: ', error)
+        }
       }
 
-      ws.onerror = function (error) {
-        console.error('WebSocket Error: ', error)
-      }
-    }
-
-    main()
-  </script>
+      main()
+    </script>
 </body>
 
 </html>
